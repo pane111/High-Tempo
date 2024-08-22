@@ -28,11 +28,6 @@ public class BossPlatformRotation : MonoBehaviour
         if (isRotating)
         {
             transform.Rotate(0, rotateAmount * Time.deltaTime * 5, 0);
-            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 100, Time.deltaTime * 5);
-        }
-        else
-        {
-            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 80, Time.deltaTime * 5);
         }
     }
     public void RotateLeft()
@@ -42,6 +37,7 @@ public class BossPlatformRotation : MonoBehaviour
         isRotating = true;
         pm.anim.SetTrigger("JumpLeft");
         pm.leftDodge.Play();
+        
         Invoke("StopRotating", 0.2f);
         
     }

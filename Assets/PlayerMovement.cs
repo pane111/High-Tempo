@@ -52,6 +52,12 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("Grounded", false);
             isGrounded = false;
         }
+        if (transform.position.y < 0)
+        {
+            curHealth=0;
+            healthBar.fillAmount = 0;
+            anim.SetTrigger("Death");
+        }
 
         Quaternion forwardQ = Quaternion.Euler(0, 0, 0);
         Quaternion backwardQ = Quaternion.Euler(0, 180, 0);

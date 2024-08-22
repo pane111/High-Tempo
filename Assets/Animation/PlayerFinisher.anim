@@ -8067,6 +8067,13 @@ AnimationClip:
     floatParameter: 0.2
     intParameter: 0
     messageOptions: 0
+  - time: 0
+    functionName: Heal
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.28333333
     functionName: ChangeTimeScale
     data: 
@@ -8093,6 +8100,13 @@ AnimationClip:
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0.25
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.5833333
+    functionName: DashCam
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.7

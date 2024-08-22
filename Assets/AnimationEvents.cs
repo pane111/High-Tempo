@@ -1,6 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using URPGlitch.Runtime.DigitalGlitch;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class AnimationEvents : MonoBehaviour
 {
@@ -13,11 +18,24 @@ public class AnimationEvents : MonoBehaviour
     public GameObject finisherEffect;
     public GameObject screwEffect;
 
+    public Volume vm;
+    DigitalGlitchVolume dgv;
+
+    float intersity;
+    float curInter = 0;
+    bool isInterpolating = false;
+
+    bool isDashing=false;
+
+    public Image blackScreen;
+
     public bool canAttack;
     void Start()
     {
         anim = GetComponent<Animator>();
         pm = GetComponent<PlayerMovement>();
+        vm.profile.TryGet<DigitalGlitchVolume>(out dgv);
+        InterpolateBlackscreen(0);
     }
 
     // Update is called once per frame
@@ -30,6 +48,42 @@ public class AnimationEvents : MonoBehaviour
                 anim.SetTrigger("Attack");
             }
         }
+
+        if (isInterpolating)
+        {
+            if (curInter < intersity)
+            {
+                curInter += Time.deltaTime * 0.65f;
+                MyFloatParameter fP = new MyFloatParameter(curInter, false);
+                dgv.intensity.SetValue(fP);
+            }
+            else
+            {
+                isInterpolating = false;
+            }
+            
+        }
+
+        if (isDashing)
+        {
+          
+            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 100, Time.deltaTime * 5);
+        }
+        else
+        {
+            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 80, Time.deltaTime * 5);
+        }
+    }
+
+    public void DashCam()
+    {
+        isDashing = true;
+        Invoke("StopDashCam", 0.2f);
+        
+    }
+    public void StopDashCam()
+    {
+        isDashing = false;
     }
 
     public void SetTag(string t)
@@ -70,6 +124,49 @@ public class AnimationEvents : MonoBehaviour
             GetComponent<Rigidbody>().AddForce(transform.forward * force, ForceMode.VelocityChange);
         }
         
+    }
+
+    public sealed class MyFloatParameter : VolumeParameter<float>
+    {
+        public MyFloatParameter(float value, bool overrideState = false)
+            : base(value, overrideState) { }
+
+        public sealed override void Interp(float from, float to, float t)
+        {
+            m_Value = from + (to - from) * t;
+        }
+    }
+
+    void Reload()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
+    void TriggerGlitch(float intensity)
+    {
+        if (dgv!=null)
+        {
+            MyFloatParameter fP = new MyFloatParameter(intensity, false);
+            dgv.intensity.SetValue(fP);
+        }
+    }
+    void InterpolateGlitch(float intensity)
+    {
+        if (dgv!= null)
+        {
+            intersity = intensity;
+            isInterpolating = true;
+        }
+    }
+
+    void InterpolateBlackscreen(float v)
+    {
+        Color newColor = new Color(0, 0, 0, v);
+        DOVirtual.Color(blackScreen.color, newColor, 1, (value) =>
+        {
+            blackScreen.color = value;
+        });
     }
     
     public void StopDash()
@@ -135,6 +232,11 @@ public class AnimationEvents : MonoBehaviour
         
         
 
+    }
+    void Heal()
+    {
+        pm.curHealth = pm.maxHealth;
+        pm.healthBar.fillAmount = 1;
     }
     void StopMovement()
     {

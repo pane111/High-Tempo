@@ -3606,8 +3606,15 @@ AnimationClip:
     floatParameter: -8
     intParameter: 0
     messageOptions: 0
-  - time: 0.43333334
-    functionName: StopDash
+  - time: 0
+    functionName: DashCam
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.33333334
+    functionName: StopDashCam
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
