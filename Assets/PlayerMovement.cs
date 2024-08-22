@@ -32,8 +32,8 @@ public class PlayerMovement : MonoBehaviour
 
     public ParticleSystem dmgEffect;
 
-    
 
+    public bool invincible=false;
     void Start()
     {
         curHealth = maxHealth;
@@ -56,11 +56,13 @@ public class PlayerMovement : MonoBehaviour
             //screws = maxScrews;
             //dashMeter.fillAmount =1;
             isGrounded = true;
+            GameManager.Instance.playerGounded = true;
         }
         else
         {
             anim.SetBool("Grounded", false);
             isGrounded = false;
+            GameManager.Instance.playerGounded = false;
         }
         if (transform.position.y < 0)
         {
@@ -144,17 +146,21 @@ public class PlayerMovement : MonoBehaviour
 
     public void TakeDamage()
     {
-        dmgEffect.Play();
-        curHealth--;
-        healthBar.fillAmount = (float)curHealth / (float)maxHealth;
-        if (curHealth <= 0) 
+        if (!invincible)
         {
-            anim.SetTrigger("Death");
-                }
-        else
-        {
-            anim.SetTrigger("Damage");
+            dmgEffect.Play();
+            curHealth--;
+            healthBar.fillAmount = (float)curHealth / (float)maxHealth;
+            if (curHealth <= 0)
+            {
+                anim.SetTrigger("Death");
+            }
+            else
+            {
+                anim.SetTrigger("Damage");
+            }
         }
+        
     }
     private void OnTriggerEnter(Collider other)
     {

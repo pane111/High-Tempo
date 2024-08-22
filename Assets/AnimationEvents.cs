@@ -34,13 +34,10 @@ public class AnimationEvents : MonoBehaviour
     public bool canAttack;
 
 
-    public TextMeshProUGUI timer;
-    DateTime startTime;
-
-    TimeSpan eTime;
+    
     void Start()
     {
-        startTime = DateTime.Now;
+        
         anim = GetComponent<Animator>();
         pm = GetComponent<PlayerMovement>();
         vm.profile.TryGet<DigitalGlitchVolume>(out dgv);
@@ -51,8 +48,7 @@ public class AnimationEvents : MonoBehaviour
     
     void Update()
     {
-        eTime = DateTime.Now - startTime;
-        timer.text = eTime.ToString(@"mm\:ss\:ff");
+        
 
         if (canAttack)
         {
@@ -86,6 +82,15 @@ public class AnimationEvents : MonoBehaviour
         {
             Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 80, Time.deltaTime * 5);
         }
+    }
+
+    void Iframes()
+    {
+        pm.invincible = true;
+    }
+    void StopIframes()
+    {
+        pm.invincible = false;
     }
 
     public void DashCam()
