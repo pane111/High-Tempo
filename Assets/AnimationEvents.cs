@@ -6,6 +6,8 @@ using URPGlitch.Runtime.DigitalGlitch;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using System;
+using TMPro;
 
 public class AnimationEvents : MonoBehaviour
 {
@@ -30,8 +32,15 @@ public class AnimationEvents : MonoBehaviour
     public Image blackScreen;
 
     public bool canAttack;
+
+
+    public TextMeshProUGUI timer;
+    DateTime startTime;
+
+    TimeSpan eTime;
     void Start()
     {
+        startTime = DateTime.Now;
         anim = GetComponent<Animator>();
         pm = GetComponent<PlayerMovement>();
         vm.profile.TryGet<DigitalGlitchVolume>(out dgv);
@@ -39,8 +48,12 @@ public class AnimationEvents : MonoBehaviour
     }
 
     // Update is called once per frame
+    
     void Update()
     {
+        eTime = DateTime.Now - startTime;
+        timer.text = eTime.ToString(@"mm\:ss\:ff");
+
         if (canAttack)
         {
             if (Input.GetMouseButtonDown(0))

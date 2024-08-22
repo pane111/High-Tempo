@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -30,16 +32,24 @@ public class PlayerMovement : MonoBehaviour
 
     public ParticleSystem dmgEffect;
 
+    
+
     void Start()
     {
         curHealth = maxHealth;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        
+
     }
+    
 
     // Update is called once per frame
     void Update()
     {
+        
+       
+
         if (Physics.Raycast(center.position, Vector3.down, groundCheckRange))
         {
             anim.SetBool("Grounded", true);
@@ -103,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
         {
             anim.SetTrigger("Attack");
         }
-        Debug.DrawRay(center.position, Vector3.down * groundCheckRange, Color.yellow);
+        
         
 
         if (Input.GetKeyDown(KeyCode.Space) && !isGrounded && canMove)

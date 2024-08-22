@@ -57,6 +57,7 @@ public class ScrewTarget : MonoBehaviour
 
             if (breakOnHit)
             {
+                other.transform.parent.position = transform.position;
                 drone.reticle.anim.ResetTrigger("Start");
                 drone.reticle.anim.SetTrigger("Stop");
                 drone.isIdle = true;
