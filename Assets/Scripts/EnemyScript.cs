@@ -18,6 +18,8 @@ public class EnemyScript : MonoBehaviour
     public float health;
 
     public ParticleSystem finalHit;
+
+    public bool grounded;
     void Start()
     {
         health = maxHealth;
@@ -52,7 +54,7 @@ public class EnemyScript : MonoBehaviour
             if (!hyperarmor && other.CompareTag("PlayerSword"))
             {
                 TakeDamage(1);
-                rb.AddForce(-transform.forward * 4, ForceMode.Impulse);
+                rb.AddForce(-transform.forward * 1.5f, ForceMode.Impulse);
                 anim.SetTrigger("Hit");
                 //reticleAnim.ResetTrigger("Stop");
                 //reticleAnim.SetTrigger("Start");
@@ -65,12 +67,15 @@ public class EnemyScript : MonoBehaviour
             else if (!hyperarmor && other.CompareTag("PlayerSwordStagger"))
             {
                 TakeDamage(2);
+
+                grounded = false;
+                anim.SetBool("Grounded", grounded);
                 anim.SetTrigger("StaggerHit");
+
                 //reticleAnim.ResetTrigger("Start");
                 //reticleAnim.SetTrigger("Stop");
                 rb.velocity = Vector3.zero;
                 rb.AddForce(transform.up*8,ForceMode.Impulse);
-                
                 Time.timeScale = 0.2f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 Invoke("ResetTime", 0.13f);
@@ -125,6 +130,25 @@ public class EnemyScript : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         anim.SetTrigger("Death");
         
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Terrain"))
+        {
+            grounded = true;
+            anim.SetBool("Grounded", grounded);
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+
+        if (collision.gameObject.CompareTag("Terrain"))
+        {
+            grounded = false;
+            anim.SetBool("Grounded", grounded);
+        }
     }
 
     public void ResetVelocity()
