@@ -91,6 +91,8 @@ public class AnimationEvents : MonoBehaviour
     void StopIframes()
     {
         pm.invincible = false;
+        GetComponent<Collider>().enabled = false;
+        GetComponent<Collider>().enabled = true;
     }
 
     public void DashCam()

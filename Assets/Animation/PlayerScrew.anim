@@ -2689,6 +2689,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0
+    functionName: Iframes
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.016666668
     functionName: SpawnScrewEffect
     data: 
@@ -2705,6 +2712,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.33333334
     functionName: StopDash2
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.33333334
+    functionName: StopIframes
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
