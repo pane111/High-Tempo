@@ -9,10 +9,11 @@
 * S - Move backwards
 * Space - Jump
 * Space while mid-air - Dash
-* Right click (hold) - Shoot (Release when drone is fully charged to perfrom laser beam)
+* Right click (hold) - Shoot (Hit an enemy or object to lock on to them)
 * Left click - Attack (You can also attack mid-air)
 * Left Shift - Backstep
 * A/D - Sidestep
+* Middle click - Lock off
 
 
 
