@@ -122,6 +122,11 @@ public class AnimationEvents : MonoBehaviour
     {
         canAttack = false;
     }
+
+    void JumpUp(float force)
+    {
+        pm.rb.AddForce(transform.up * force, ForceMode.Impulse);
+    }
     public void Dash(float force)
     {
         

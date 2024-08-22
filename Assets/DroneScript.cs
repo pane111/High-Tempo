@@ -57,8 +57,20 @@ public class DroneScript : MonoBehaviour
                 else
                 {
                     enemyHPBar.SetActive(false);
+                    
                 }
                 
+            }
+
+
+            if (Input.GetMouseButton(2))
+            {
+                enemyHPBar.SetActive(false);
+                reticle.target = null;
+                lookTarget = null;
+                isIdle = true;
+                reticle.GetComponent<Animator>().ResetTrigger("Start");
+                reticle.GetComponent<Animator>().SetTrigger("Stop");
             }
             
         }
@@ -85,17 +97,19 @@ public class DroneScript : MonoBehaviour
         if (Input.GetMouseButtonUp(1))
         {
             isShooting = false;
-            if (chargeAmt > 0.95f)
-            {
-                print("Shot laser");
-                laserbeam.SetActive(true);
-                Invoke("DisableBeam", 0.2f);
-            }
+            
         }
 
         if (Input.GetMouseButton(1))
         {
             chargeAmt += Time.deltaTime * 0.8f;
+            if (chargeAmt >= 1)
+            {
+                print("Shot laser");
+                laserbeam.SetActive(true);
+                Invoke("DisableBeam", 0.2f);
+                chargeAmt = 0;
+            }
             if (isIdle)
             {
                 transform.position = Vector3.Slerp(transform.position, shootPoint.position, Time.deltaTime * 15);
@@ -122,8 +136,8 @@ public class DroneScript : MonoBehaviour
     public void Shoot()
     {
         GameObject bullet = Instantiate (bulletPrefab,transform.position,Quaternion.identity);
-        bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 35,ForceMode.Impulse);
-        Destroy(bullet, 1);
+        bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 40,ForceMode.Impulse);
+        Destroy(bullet, 0.5f);
 
         if (isShooting ) { Invoke("Shoot", shotDelay); }
     }

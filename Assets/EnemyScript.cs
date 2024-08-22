@@ -68,8 +68,9 @@ public class EnemyScript : MonoBehaviour
                 anim.SetTrigger("StaggerHit");
                 //reticleAnim.ResetTrigger("Start");
                 //reticleAnim.SetTrigger("Stop");
+                rb.velocity = Vector3.zero;
+                rb.AddForce(transform.up*8,ForceMode.Impulse);
                 
-                rb.AddForce(-transform.forward*10,ForceMode.Impulse);
                 Time.timeScale = 0.2f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 Invoke("ResetTime", 0.13f);
