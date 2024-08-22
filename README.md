@@ -8,9 +8,9 @@
 * W - Move forward
 * S - Move backwards
 * Space - Jump
-* Space in midair - Dash
+* Space while mid-air - Dash
 * Right click (hold) - Shoot (Release when drone is fully charged to perfrom laser beam)
-* Left click - Attack
+* Left click - Attack (You can also attack mid-air)
 * Left Shift - Backstep
 * A/D - Sidestep
 
