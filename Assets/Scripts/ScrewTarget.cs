@@ -78,7 +78,7 @@ public class ScrewTarget : MonoBehaviour
             Destroy(other.gameObject);
             if (isEnemy)
             {
-                GetComponent<EnemyScript>().TakeDamage(0.25f);
+                GetComponent<EnemyScript>().TakeDamage(0.15f);
             }
         }
     }

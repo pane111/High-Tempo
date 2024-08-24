@@ -188,7 +188,7 @@ public class AnimationEvents : MonoBehaviour
     void InterpolateBlackscreen(float v)
     {
         Color newColor = new Color(0, 0, 0, v);
-        DOVirtual.Color(blackScreen.color, newColor, 1, (value) =>
+        DOVirtual.Color(blackScreen.color, newColor, 1.4f, (value) =>
         {
             blackScreen.color = value;
         });
@@ -239,7 +239,8 @@ public class AnimationEvents : MonoBehaviour
                 pm.RefillScrews();
                 
                 transform.position = ds.lookTarget.position - transform.forward;
-                
+                //transform.position = new Vector3(transform.position.x, 8, transform.position.z);
+                ds.lookTarget = null;
                 anim.SetTrigger("Finisher");
             }
             else

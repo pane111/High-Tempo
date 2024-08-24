@@ -148,11 +148,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!invincible)
         {
+            invincible = true;
+            
             dmgEffect.Play();
             curHealth--;
             healthBar.fillAmount = (float)curHealth / (float)maxHealth;
             if (curHealth <= 0)
             {
+                rb.useGravity = false;
+                rb.isKinematic = true;
+                GetComponent<Collider>().enabled = false;
                 anim.SetTrigger("Death");
             }
             else

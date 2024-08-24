@@ -24,7 +24,7 @@ public class UIRotate : MonoBehaviour
         }
         else
         {
-            transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
+            transform.position = Vector3.Slerp(transform.position,new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0),Time.deltaTime*9);
         }
         obj.rotation *= Quaternion.Euler(0, 0, (Time.deltaTime * speed)%360);
 

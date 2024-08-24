@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public PlayerMovement player;
+
     Stopwatch sw=new Stopwatch();
     public bool playerGounded
     {
@@ -46,6 +48,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         startTime = DateTime.Now;
+
+        if (player == null)
+        {
+            player = FindObjectOfType<PlayerMovement>();
+        }
         
     }
 

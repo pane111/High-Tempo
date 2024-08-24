@@ -17,21 +17,108 @@ public class EnemyScript : MonoBehaviour
     public float maxHealth;
     public float health;
 
+    public float maxPoise;
+    public float poise;
+    public bool isBoss;
+
     public ParticleSystem finalHit;
+    public ParticleSystem teleport;
+
+    public Transform player;
+    public float playerFollowDistance;
+    bool following;
+
+    public float playerStoppingDistance;
+    public float moveSpeed;
+
+    public Transform rig;
+
+    bool canMove;
+
+    public float atkDelay;
+    public float comboChance;
 
     public bool grounded;
+
+    float eTime = 0;
     void Start()
     {
+        eTime = atkDelay;
         health = maxHealth;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         drone = FindObjectOfType<DroneScript>();
+        player = GameManager.Instance.player.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
+        float curDistance = player.position.z - transform.position.z;
+        if (canMove)
+        {
+            
+
+            if (Mathf.Abs(curDistance) <= playerFollowDistance)
+            {
+                following = true;
+            }
+            if (curDistance < 0)
+            {
+                if (rig != null)
+                    rig.rotation = Quaternion.Euler(0, 180, 0);
+                
+            }
+            else
+            {
+                if (rig != null)
+                    rig.rotation = Quaternion.Euler(0, 0, 0);
+            }
+
+            
+            if (following && transform.position.z < player.position.z && health > 0)
+            {
+                transform.position = new Vector3(transform.position.x,transform.position.y, player.position.z+4);
+                teleport.Play();
+            }
+
+            if (Mathf.Abs(curDistance) > playerStoppingDistance && following && grounded)
+            {
+                rb.velocity = new Vector3(0, rb.velocity.y, moveSpeed * (curDistance / Mathf.Abs(curDistance)));
+                anim.SetBool("Moving", true);
+                eTime = atkDelay;
+
+            }
+            else
+            {
+               
+                anim.SetBool("Moving", false);
+            }
+        }
         
+
+        if (Mathf.Abs(curDistance) <= playerStoppingDistance && following && grounded)
+        {
+
+            if (player.position.y > transform.position.y+2 && Mathf.Abs(curDistance) < 0.8f) 
+            {
+                anim.SetTrigger("JumpAttack");
+                
+            }
+            //can attack
+            eTime += Time.deltaTime;
+            if (eTime >= atkDelay)
+            {
+                eTime = 0;
+                anim.SetTrigger("Attack");
+                float randomChance = Random.Range(0, 100);
+
+                if (randomChance <= comboChance)
+                {
+                    eTime = atkDelay;
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,11 +138,18 @@ public class EnemyScript : MonoBehaviour
             drone.lookTarget = center;
             drone.isIdle = false;
             
-            if (!hyperarmor && other.CompareTag("PlayerSword"))
+            if (other.CompareTag("PlayerSword"))
             {
                 TakeDamage(1);
-                rb.AddForce(-transform.forward * 1.5f, ForceMode.Impulse);
-                anim.SetTrigger("Hit");
+                
+
+                if ((isBoss && poise <= 0) || !isBoss)
+                {
+                    SetMass(1);
+                    rb.AddForce(-transform.forward * 1.5f, ForceMode.Impulse);
+                    anim.SetTrigger("Hit");
+                }
+                
                 //reticleAnim.ResetTrigger("Stop");
                 //reticleAnim.SetTrigger("Start");
                 
@@ -64,18 +158,23 @@ public class EnemyScript : MonoBehaviour
                 Invoke("ResetTime", 0.02f);
                 
             }
-            else if (!hyperarmor && other.CompareTag("PlayerSwordStagger"))
+            else if (other.CompareTag("PlayerSwordStagger"))
             {
                 TakeDamage(2);
 
-                grounded = false;
-                anim.SetBool("Grounded", grounded);
-                anim.SetTrigger("StaggerHit");
+                if ((isBoss && poise <= 0) || !isBoss)
+                {
+                    grounded = false;
+                    anim.SetBool("Grounded", grounded);
+                    anim.SetTrigger("StaggerHit");
 
-                //reticleAnim.ResetTrigger("Start");
-                //reticleAnim.SetTrigger("Stop");
-                rb.velocity = Vector3.zero;
-                rb.AddForce(transform.up*8,ForceMode.Impulse);
+                    //reticleAnim.ResetTrigger("Start");
+                    //reticleAnim.SetTrigger("Stop");
+                    rb.velocity = Vector3.zero;
+                    SetMass(1);
+                    rb.AddForce(transform.up * 8, ForceMode.Impulse);
+                }
+                    
                 Time.timeScale = 0.2f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
                 Invoke("ResetTime", 0.13f);
@@ -105,6 +204,10 @@ public class EnemyScript : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
+        if (isBoss)
+        {
+            poise-=amount;
+        }
         
         GetComponent<ScrewTarget>().EHB.fillAmount = health / maxHealth;
         if (health<=1)
@@ -119,8 +222,38 @@ public class EnemyScript : MonoBehaviour
         //if (health <= 0) { Die(); }
     }
 
+    void SetMass(int m)
+    {
+        rb.mass = m;
+    }
+    void ResetJumpTrigger()
+    {
+        anim.ResetTrigger("JumpAttack");
+    }
+
+    public void StopMovement()
+    {
+        canMove = false;
+    }
+    public void EnableMovement()
+    {
+        canMove=true;
+    }
+    public void EnemyDash(float amount)
+    {
+        SetMass(1);
+        rb.AddForce(rig.forward * amount, ForceMode.Impulse); 
+    }
+    void JumpUp()
+    {
+        SetMass(1);
+        rb.AddForce(transform.up * 8.5f, ForceMode.Impulse);
+    }
+    
+
     public void Die()
     {
+        rig = null;
         GetComponent<ScrewTarget>().EFB.fillAmount = 0;
         gameObject.tag = "Untagged";
         Time.timeScale = 0.15f;
@@ -130,6 +263,11 @@ public class EnemyScript : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         anim.SetTrigger("Death");
         
+    }
+
+    public void RePoise()
+    {
+        poise = maxPoise;
     }
 
     private void OnCollisionEnter(Collision collision)

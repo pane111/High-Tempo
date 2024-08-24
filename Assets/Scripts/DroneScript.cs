@@ -102,7 +102,7 @@ public class DroneScript : MonoBehaviour
 
         if (Input.GetMouseButton(1))
         {
-            chargeAmt += Time.deltaTime * 0.8f;
+            chargeAmt += Time.deltaTime * 0.6f;
             if (chargeAmt >= 1)
             {
                 print("Shot laser");
