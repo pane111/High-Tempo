@@ -76,13 +76,19 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && canMove)
         {
-            if (Input.GetAxisRaw("Vertical") > 0)
+            string _axis = "Vertical";
+            if (!GameManager.Instance.options.defaultControls)
+            {
+                _axis = "Horizontal"; 
+            }
+
+            if (Input.GetAxisRaw(_axis) > 0)
             {
                 anim.SetBool("Moving", true);
                 rig.rotation = Quaternion.Lerp(rig.rotation, forwardQ, Time.deltaTime * 15);
                 rb.velocity = new Vector3(0, rb.velocity.y, initMoveSpeed);
             }
-            else if (Input.GetAxisRaw("Vertical") < 0)
+            else if (Input.GetAxisRaw(_axis) < 0)
             {
                 anim.SetBool("Moving", true);
                 rig.rotation = Quaternion.Lerp(rig.rotation, backwardQ, Time.deltaTime * 15);

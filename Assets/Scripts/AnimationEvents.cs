@@ -33,7 +33,6 @@ public class AnimationEvents : MonoBehaviour
 
     public bool canAttack;
 
-
     
     void Start()
     {
@@ -164,13 +163,22 @@ public class AnimationEvents : MonoBehaviour
 
     void Reload()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (GameManager.Instance.lastCheckpoint == null)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else
+        {
+            transform.position = GameManager.Instance.lastCheckpoint.transform.position;
+            GameManager.Instance.ReloadToCP();
+        }
+        
     }
 
 
     void TriggerGlitch(float intensity)
     {
-        if (dgv!=null)
+        if (dgv!=null && GameManager.Instance.options.screenGlitch)
         {
             MyFloatParameter fP = new MyFloatParameter(intensity, false);
             dgv.intensity.SetValue(fP);
@@ -178,7 +186,7 @@ public class AnimationEvents : MonoBehaviour
     }
     void InterpolateGlitch(float intensity)
     {
-        if (dgv!= null)
+        if (dgv!= null && GameManager.Instance.options.screenGlitch)
         {
             intersity = intensity;
             isInterpolating = true;

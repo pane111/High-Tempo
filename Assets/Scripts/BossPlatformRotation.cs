@@ -16,11 +16,19 @@ public class BossPlatformRotation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A) && pm.canMove && pm.isGrounded)
+        KeyCode btn = KeyCode.A;
+        KeyCode btn2 = KeyCode.D;
+
+        if (!GameManager.Instance.options.defaultControls)
+        {
+            btn = KeyCode.W; btn2 = KeyCode.S;
+        }
+
+        if (Input.GetKeyDown(btn) && pm.canMove && pm.isGrounded)
         {
             RotateLeft();
         }
-        if (Input.GetKeyDown(KeyCode.D) && pm.canMove && pm.isGrounded)
+        if (Input.GetKeyDown(btn2) && pm.canMove && pm.isGrounded)
         {
             RotateRight();
         }
