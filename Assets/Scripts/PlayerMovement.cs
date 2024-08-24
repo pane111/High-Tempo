@@ -122,6 +122,12 @@ public class PlayerMovement : MonoBehaviour
             anim.SetTrigger("Attack");
         }
         
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            TakeForcedDamage();
+            TakeForcedDamage();
+            TakeForcedDamage();
+        }
         
 
         if (Input.GetKeyDown(KeyCode.Space) && !isGrounded && canMove)
@@ -148,6 +154,25 @@ public class PlayerMovement : MonoBehaviour
         screws++;
         if (screws > maxScrews) { screws=maxScrews;}
         dashMeter.fillAmount = screws / maxScrews;
+    }
+    public void TakeForcedDamage()
+    {
+        invincible = true;
+
+        dmgEffect.Play();
+        curHealth--;
+        healthBar.fillAmount = (float)curHealth / (float)maxHealth;
+        if (curHealth <= 0)
+        {
+            rb.useGravity = false;
+            //rb.isKinematic = true;
+            //GetComponent<Collider>().enabled = false;
+            anim.SetTrigger("Death");
+        }
+        else
+        {
+            anim.SetTrigger("Damage");
+        }
     }
 
     public void TakeDamage()

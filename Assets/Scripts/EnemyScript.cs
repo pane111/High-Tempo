@@ -122,6 +122,11 @@ public class EnemyScript : MonoBehaviour
                 
             }
         }
+
+        if ( transform.position.y < 0)
+        {
+            TakeDamage(9999);
+        }
     }
 
     void Combo()
@@ -146,6 +151,7 @@ public class EnemyScript : MonoBehaviour
         rb.isKinematic = false;
         GetComponent<Collider>().enabled = true;
         EnableMovement();
+        following = false;
 
     }
 

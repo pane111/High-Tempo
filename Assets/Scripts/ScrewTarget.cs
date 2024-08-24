@@ -15,6 +15,7 @@ public class ScrewTarget : MonoBehaviour
     {
         drone = FindObjectOfType<DroneScript>();
         EHB = drone.EHB; EFB = drone.EFB;
+        GameManager.Instance.onReset += EnableThis;
     }
 
     // Update is called once per frame
@@ -25,6 +26,10 @@ public class ScrewTarget : MonoBehaviour
     void DisableThis()
     {
         gameObject.SetActive(false);
+    }
+    void EnableThis()
+    {
+        gameObject.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -69,7 +74,7 @@ public class ScrewTarget : MonoBehaviour
                 drone.lookTarget = null;
                 print("Hit triggered");
                 other.GetComponentInParent<PlayerMovement>().RestoreOneScrew();
-                Destroy(gameObject);
+                DisableThis();
             }
             
         }

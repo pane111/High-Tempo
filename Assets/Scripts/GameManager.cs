@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
     public Action onReset;
     DroneScript drone;
 
+
+
     void Start()
     {
         drone = FindObjectOfType<DroneScript>();
@@ -147,6 +149,8 @@ public class GameManager : MonoBehaviour
 
     public void TouchCheckpoint(GameObject checkPoint)
     {
+        checkpointTimer.gameObject.SetActive(true);
+        Invoke("RemoveCPTimer", 1.5f);
         eWatch.Restart();
 
         lostTime.Reset();
@@ -166,6 +170,10 @@ public class GameManager : MonoBehaviour
         }
         defeatedEnemies.Clear();
         checkpointTimer.text = timer.text + "\n" + gTimer.text;
+    }
+    void RemoveCPTimer()
+    {
+        checkpointTimer.gameObject.SetActive(false);
     }
 
     public void ReloadToCP()

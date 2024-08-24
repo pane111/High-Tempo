@@ -3532,7 +3532,7 @@ AnimationClip:
     functionName: Dash
     data: 
     objectReferenceParameter: {fileID: 0}
-    floatParameter: -6
+    floatParameter: -3
     intParameter: 0
     messageOptions: 0
   - time: 0.016666668
