@@ -117,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !GameManager.Instance.isPaused)
         {
             anim.SetTrigger("Attack");
         }
@@ -162,8 +162,8 @@ public class PlayerMovement : MonoBehaviour
             if (curHealth <= 0)
             {
                 rb.useGravity = false;
-                rb.isKinematic = true;
-                GetComponent<Collider>().enabled = false;
+                //rb.isKinematic = true;
+                //GetComponent<Collider>().enabled = false;
                 anim.SetTrigger("Death");
             }
             else
@@ -175,10 +175,18 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        print("Collided with trigger " + other.name);
+        //print("Collided with trigger " + other.name);
         if (other.CompareTag("EnemyAttack"))
         {
             TakeDamage();
+        }
+        if (other.CompareTag("Checkpoint"))
+        {
+            if (GameManager.Instance.lastCheckpoint != other.gameObject)
+            {
+                other.GetComponentInChildren<ParticleSystem>().Play();
+                GameManager.Instance.TouchCheckpoint(other.gameObject);
+            }
         }
     }
     private void OnCollisionEnter(Collision collision)

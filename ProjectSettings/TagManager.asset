@@ -10,6 +10,7 @@ TagManager:
   - PlayerBullet
   - Terrain
   - EnemyAttack
+  - Checkpoint
   layers:
   - Default
   - TransparentFX

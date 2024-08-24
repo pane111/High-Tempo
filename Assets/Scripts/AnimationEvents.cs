@@ -169,7 +169,18 @@ public class AnimationEvents : MonoBehaviour
         }
         else
         {
-            transform.position = GameManager.Instance.lastCheckpoint.transform.position;
+
+            GetComponent<Rigidbody>().isKinematic = false;
+            GetComponent<Rigidbody>().position = (GameManager.Instance.lastCheckpoint.transform.position);
+            Debug.Log(transform.position);
+            pm.invincible = true;
+            Invoke("StopIframes", 1);
+            Heal();
+            InterpolateBlackscreen(0);
+            TriggerGlitch(0);
+            EnablePm();
+            StartMovement();
+            StopDash();
             GameManager.Instance.ReloadToCP();
         }
         

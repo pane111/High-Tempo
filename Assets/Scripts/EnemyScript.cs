@@ -41,8 +41,13 @@ public class EnemyScript : MonoBehaviour
     public bool grounded;
 
     float eTime = 0;
+    Vector3 initialPosition;
     void Start()
     {
+        GameManager.Instance.onReset += ResetEnemy;
+
+        reticleAnim = GameManager.Instance.reticleAnim;
+        initialPosition = transform.position;
         eTime = atkDelay;
         health = maxHealth;
         anim = GetComponent<Animator>();
@@ -50,6 +55,8 @@ public class EnemyScript : MonoBehaviour
         drone = FindObjectOfType<DroneScript>();
         player = GameManager.Instance.player.transform;
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -81,6 +88,7 @@ public class EnemyScript : MonoBehaviour
                 transform.position = new Vector3(transform.position.x,transform.position.y, player.position.z+4);
                 teleport.Play();
             }
+            
 
             if (Mathf.Abs(curDistance) > playerStoppingDistance && following && grounded)
             {
@@ -124,6 +132,21 @@ public class EnemyScript : MonoBehaviour
         {
             anim.SetTrigger("Attack");
         }
+    }
+
+    public void ResetEnemy()
+    {
+        rb.velocity = Vector3.zero; 
+        health = maxHealth;
+        poise = maxPoise;
+        rb.position = initialPosition;
+        anim.SetTrigger("ResetAnims");
+        
+        rb.useGravity = true;
+        rb.isKinematic = false;
+        GetComponent<Collider>().enabled = true;
+        EnableMovement();
+
     }
 
     private void OnTriggerEnter(Collider other)

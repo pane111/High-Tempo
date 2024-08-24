@@ -22,6 +22,10 @@ public class ScrewTarget : MonoBehaviour
     {
         
     }
+    void DisableThis()
+    {
+        gameObject.SetActive(false);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -41,9 +45,10 @@ public class ScrewTarget : MonoBehaviour
                 {
                     GetComponent<EnemyScript>().Die();
                     other.GetComponentInParent<AnimationEvents>().ScrewCol(true,false);
-                    Destroy(gameObject,1.5f);
+                    Invoke("DisableThis", 1.5f);
                     drone.reticle.anim.ResetTrigger("Start");
                     drone.reticle.anim.SetTrigger("Stop");
+                    GameManager.Instance.defeatedEnemies.Add(gameObject);
                 }
                 else
                 {

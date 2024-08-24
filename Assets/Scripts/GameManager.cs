@@ -14,8 +14,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     public TextMeshProUGUI timer;
     public TextMeshProUGUI gTimer;
-    
-    
+
+    public TextMeshProUGUI checkpointTimer;
 
     private static GameManager _instance;
 
@@ -50,11 +50,11 @@ public class GameManager : MonoBehaviour
     Stopwatch sw=new Stopwatch();
 
     Stopwatch pauseSw=new Stopwatch();
-    bool isPaused=false;
+    public bool isPaused=false;
     public GameObject pauseMenu;
     public bool playerGounded
     {
-        set { if (value) { if (!isPaused)sw.Start(); } else { sw.Stop(); } }
+        set { if (value) { if (!isPaused) { sw.Start();  } } else { sw.Stop();  } }
     }
 
     DateTime startTime;
@@ -64,12 +64,24 @@ public class GameManager : MonoBehaviour
 
     Stopwatch tempSw;
     Stopwatch tempPauseSw;
+    Stopwatch lostTime = new Stopwatch();
+    Stopwatch eWatch = new Stopwatch();
+    
     TimeSpan tempETime;
     TimeSpan tempGTime;
     public GameObject lastCheckpoint;
 
+    public Animator reticleAnim;
+
+    public List<GameObject> defeatedEnemies = new List<GameObject>();
+
+    public Action onReset;
+    DroneScript drone;
+
     void Start()
     {
+        drone = FindObjectOfType<DroneScript>();
+        lostTime.Stop();
         Time.timeScale = 1;
         if (isPaused)
         {
@@ -93,20 +105,38 @@ public class GameManager : MonoBehaviour
 
         gToggle.isOn = options.screenGlitch;
         cToggle.isOn = options.defaultControls;
+        eWatch.Start();
     }
 
+    public bool isLostTimeRunning;
     // Update is called once per frame
     void Update()
     {
+
+        isLostTimeRunning = lostTime.IsRunning;
         eTime = DateTime.Now - startTime;
-        TimeSpan eMinusPausedTime = eTime - pauseSw.Elapsed;
-        timer.text = eMinusPausedTime.ToString(@"mm\:ss\:ff");
+        if (!lostTime.IsRunning)
+        {
+            
+            TimeSpan eMinusPausedTime = tempETime + eWatch.Elapsed - pauseSw.Elapsed;
+            timer.text = eMinusPausedTime.ToString(@"mm\:ss\:ff");
+            gTime = tempGTime + sw.Elapsed;
+            
+            
+            gTimer.text = gTime.ToString(@"mm\:ss\:ff");
+        }
+        else
+        {
+            
+            TimeSpan eMinusPausedTime = tempETime + eWatch.Elapsed - pauseSw.Elapsed;
+            timer.text = eMinusPausedTime.ToString(@"mm\:ss\:ff");
+            
+            gTime = sw.Elapsed;
+            gTimer.text = gTime.ToString(@"mm\:ss\:ff");
+        }
 
 
         
-
-        gTime = sw.Elapsed;
-        gTimer.text = gTime.ToString(@"mm\:ss\:ff");
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -117,6 +147,10 @@ public class GameManager : MonoBehaviour
 
     public void TouchCheckpoint(GameObject checkPoint)
     {
+        eWatch.Restart();
+
+        lostTime.Reset();
+        lostTime.Start();
         lastCheckpoint = checkPoint;
         tempSw = sw;
         tempSw.Stop();
@@ -124,11 +158,39 @@ public class GameManager : MonoBehaviour
         tempPauseSw.Stop();
         tempETime = eTime;
         tempGTime = gTime;
+        print(tempGTime.ToString());
+        for (int i = defeatedEnemies.Count-1; i > 0; i--) 
+        {
+            if (defeatedEnemies[i] != null)
+            Destroy(defeatedEnemies[i]);
+        }
+        defeatedEnemies.Clear();
+        checkpointTimer.text = timer.text + "\n" + gTimer.text;
     }
 
     public void ReloadToCP()
     {
-
+        eWatch.Restart();
+        lostTime.Stop();
+        drone.lookTarget = null;
+        drone.isIdle = true;
+        if (onReset != null)
+            onReset();
+        
+        sw.Reset();
+        pauseSw = tempPauseSw;
+        
+        eTime = tempETime;
+        //gTime = tempGTime;
+        for (int i = 0; i < defeatedEnemies.Count; i++)
+        {
+            if (defeatedEnemies[i] != null)
+                defeatedEnemies[i].SetActive(true);
+            if (defeatedEnemies[i] != null)
+                defeatedEnemies[i].GetComponent<EnemyScript>().ResetEnemy();
+        }
+        defeatedEnemies.Clear();
+        lostTime.Reset();
     }
 
     public void TogglePause()
