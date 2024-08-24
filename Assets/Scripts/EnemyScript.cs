@@ -111,13 +111,18 @@ public class EnemyScript : MonoBehaviour
             {
                 eTime = 0;
                 anim.SetTrigger("Attack");
-                float randomChance = Random.Range(0, 100);
-
-                if (randomChance <= comboChance)
-                {
-                    eTime = atkDelay;
-                }
+                
             }
+        }
+    }
+
+    void Combo()
+    {
+        float randomChance = Random.Range(0, 100);
+
+        if (randomChance <= comboChance)
+        {
+            anim.SetTrigger("Attack");
         }
     }
 

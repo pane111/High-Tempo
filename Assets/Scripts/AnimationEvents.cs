@@ -242,6 +242,7 @@ public class AnimationEvents : MonoBehaviour
                 //transform.position = new Vector3(transform.position.x, 8, transform.position.z);
                 ds.lookTarget = null;
                 anim.SetTrigger("Finisher");
+                Heal();
             }
             else
             {
