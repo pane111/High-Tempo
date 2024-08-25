@@ -8,6 +8,7 @@ using System.Diagnostics;
 
 using System.IO;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -38,9 +39,16 @@ public class GameManager : MonoBehaviour
         public bool screenGlitch = true;
         public bool defaultControls = true;
     }
+    public class Results
+    {
+        public string totalTime;
+        public string groundTime;
+    }
 
+    public TextMeshProUGUI dialogueText;
+    public Animator dialoguePanel;
 
-    public string optionPath = "Assets/settings.json";
+    private string optionPath;
     public Options options;
     public Toggle gToggle;
     public Toggle cToggle;
@@ -78,10 +86,18 @@ public class GameManager : MonoBehaviour
     public Action onReset;
     DroneScript drone;
 
+    public Image whitescreen;
 
+    public List<TMP_Text> strings = new List<TMP_Text>();
+    int curTut = 0;
+    public GameObject finalCheckpoint;
+
+    Results results = new Results();
 
     void Start()
     {
+        optionPath = Application.persistentDataPath + "/settings.json";
+        StartCoroutine(FlashText(6, strings[curTut]));
         drone = FindObjectOfType<DroneScript>();
         lostTime.Stop();
         Time.timeScale = 1;
@@ -137,7 +153,10 @@ public class GameManager : MonoBehaviour
             gTimer.text = gTime.ToString(@"mm\:ss\:ff");
         }
 
-
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            DisplayDialogue("Stop bothering me already! You are annoying!");
+        }
         
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -147,10 +166,62 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void InterpolateWhitescreen(float dur)
+    {
+        StartCoroutine(Whitescreen(dur));
+    }
+
+    IEnumerator Whitescreen(float seconds)
+    {
+        whitescreen.enabled = true;
+        Color newColor = Color.white;
+
+        DOVirtual.Color(whitescreen.color, newColor, seconds/1.4f, (value) =>
+        {
+            whitescreen.color = value;
+        });
+        yield return new WaitForSeconds(seconds);
+        Color nColor2 = new Color(1, 1, 1, 0);
+        DOVirtual.Color(whitescreen.color, nColor2, seconds/5, (value) =>
+        {
+            whitescreen.color = value;
+        });
+        yield return new WaitForSeconds(seconds/5);
+        whitescreen.enabled = false;
+        yield return null;
+    }
+    public void DisplayDialogue(string d)
+    {
+        dialogueText.text = d;
+        dialoguePanel.SetTrigger("TriggerDialogue");
+    }
+
+    public void DisplayNextHint()
+    {
+        curTut++;
+        StartCoroutine(FlashText(4.5f, strings[curTut]));
+
+        
+    }
+
+    public IEnumerator FlashText(float seconds, TMP_Text text)
+    {
+        text.enabled = true;
+        Color newColor = new Color(0, 0, 0, 0);
+        yield return new WaitForSeconds(seconds/2);
+        DOVirtual.Color(text.color, newColor, seconds/2, (value) =>
+        {
+            text.color = value;
+        });
+        yield return new WaitForSeconds(seconds/2);
+        
+        text.enabled = false;
+    }
+
     public void TouchCheckpoint(GameObject checkPoint)
     {
         checkpointTimer.gameObject.SetActive(true);
-        Invoke("RemoveCPTimer", 1.5f);
+        Invoke("RemoveCPTimer", 3.5f);
         eWatch.Restart();
 
         lostTime.Reset();
@@ -170,6 +241,15 @@ public class GameManager : MonoBehaviour
         }
         defeatedEnemies.Clear();
         checkpointTimer.text = timer.text + "\n" + gTimer.text;
+        if (checkPoint == finalCheckpoint)
+        {
+            results.totalTime = tempETime.ToString(@"mm\:ss\:ff");
+            results.groundTime = tempGTime.ToString(@"mm\:ss\:ff");
+            var save = JsonUtility.ToJson(results);
+            print(save.ToString());
+            File.WriteAllText(Application.persistentDataPath + "/results.json", save);
+
+        }
     }
     void RemoveCPTimer()
     {

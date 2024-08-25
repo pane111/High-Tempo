@@ -10,7 +10,7 @@ public class BossPlatformRotation : MonoBehaviour
     public bool isRotating;
     void Start()
     {
-        
+        GameManager.Instance.onReset += ResetRotation;
     }
 
     // Update is called once per frame
@@ -37,6 +37,11 @@ public class BossPlatformRotation : MonoBehaviour
         {
             transform.Rotate(0, rotateAmount * Time.deltaTime * 5, 0);
         }
+    }
+
+    void ResetRotation()
+    {
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
     public void RotateLeft()
     {

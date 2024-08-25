@@ -4923,7 +4923,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &5885834204674422837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4962,6 +4962,7 @@ MonoBehaviour:
   sphereCastRadius: 4.55
   sphereCastDistance: -8
   hitParticle: {fileID: 110025761663199347}
+  oneTimeOnly: 0
 --- !u!1 &1619372589094563359
 GameObject:
   m_ObjectHideFlags: 0

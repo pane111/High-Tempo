@@ -209,6 +209,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (GameManager.Instance.lastCheckpoint != other.gameObject)
             {
+                GetComponent<AnimationEvents>().Heal();
                 other.GetComponentInChildren<ParticleSystem>().Play();
                 GameManager.Instance.TouchCheckpoint(other.gameObject);
             }

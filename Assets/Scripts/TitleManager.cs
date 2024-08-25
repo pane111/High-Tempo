@@ -18,18 +18,27 @@ public class TitleManager : MonoBehaviour
         public bool screenGlitch = true;
         public bool defaultControls = true;
     }
-    public string optionPath = "Assets/settings.json";
+    public string optionPath; 
 
 
     public Toggle gToggle;
     public Toggle cToggle;
 
-    Options options;
+    public Options options;
 
     // Start is called before the first frame update
     void Start()
     {
+        optionPath = Application.persistentDataPath + "/settings.json";
+        string resultPath = Application.persistentDataPath + "/results.json";
+        if (!File.Exists(resultPath))
+        {
+            File.Create(resultPath);
+        }
+        SaveOptionFile();
+
         var json = File.ReadAllText(optionPath);
+        print(json.ToString());
         if (json != null)
         {
             options = JsonUtility.FromJson<Options>(json);
@@ -66,10 +75,15 @@ public class TitleManager : MonoBehaviour
         SaveOptionFile();
     }
 
-    void SaveOptionFile()
+    public void SaveOptionFile()
     {
+        if (!File.Exists(optionPath))
+        {
+            File.Create(optionPath);
+        }
         print("Saved options");
-        var save = JsonUtility.ToJson(options);
+        string save = JsonUtility.ToJson(options);
         File.WriteAllText(optionPath, save);
+        print(save + " path: " + optionPath);
     }
 }

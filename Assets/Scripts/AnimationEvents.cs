@@ -279,7 +279,7 @@ public class AnimationEvents : MonoBehaviour
         
 
     }
-    void Heal()
+    public void Heal()
     {
         pm.curHealth = pm.maxHealth;
         pm.healthBar.fillAmount = 1;

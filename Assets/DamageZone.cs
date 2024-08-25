@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.TerrainTools;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,35 +21,47 @@ public class DamageZone : MonoBehaviour
     public float sphereCastDistance;
 
     public ParticleSystem hitParticle;
+
+    public bool oneTimeOnly;
     void Start()
     {
         
     }
 
-    private void OnDrawGizmos()
-    {
-        Handles.DrawWireDisc(transform.position, transform.forward, sphereCastRadius);
-        Handles.DrawWireDisc(transform.position-transform.forward*sphereCastDistance, transform.forward, sphereCastRadius);
-        Debug.DrawLine(transform.position, transform.position-transform.forward * sphereCastDistance);
-        
-    }
 
 
     // Update is called once per frame
     void Update()
     {
         eTime += Time.deltaTime;
-        
 
-        if (eTime < chargeTime * 0.15f)
+
+        if (!oneTimeOnly)
         {
-            visual.enabled = true;
+            if (eTime < chargeTime * 0.15f)
+            {
+                visual.enabled = true;
+            }
+            else
+            {
+                visual.enabled = false;
+
+            }
         }
         else
         {
-            visual.enabled = false;
-            
+            if (eTime > chargeTime * 0.8f)
+            {
+                visual.enabled = true;
+            }
+            else
+            {
+                visual.enabled = false;
+
+            }
         }
+
+        
 
         circle.fillAmount = eTime / chargeTime;
         circle2.fillAmount = eTime / chargeTime;
@@ -62,7 +73,15 @@ public class DamageZone : MonoBehaviour
             if (cols.Length > 0)
             {
                 hitParticle.Play();
-                cols[0].gameObject.GetComponent<PlayerMovement>().TakeForcedDamage();
+                if (cols[0].gameObject.GetComponent<PlayerMovement>().curHealth > 0)
+                {
+                    cols[0].gameObject.GetComponent<PlayerMovement>().TakeForcedDamage();
+                }
+                if (oneTimeOnly)
+                {
+                    Destroy(gameObject);
+                }
+               
             }
         }
         
