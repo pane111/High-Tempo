@@ -7,6 +7,7 @@ public class CutsceneEvents : MonoBehaviour
 {
     
     public GameObject bossToSpawn;
+    public GameObject playerCanvas;
     public bool finish;
     void Start()
     {
@@ -21,6 +22,7 @@ public class CutsceneEvents : MonoBehaviour
     void DisablePlayer()
     {
         GameManager.Instance.player.gameObject.SetActive(false);
+        playerCanvas.SetActive(false);
     }
 
     void Dialogue(string message)
@@ -30,11 +32,12 @@ public class CutsceneEvents : MonoBehaviour
 
     void EndCutscene()
     {
+
         if (finish)
         {
             SceneManager.LoadScene("ResultScreen");
         }
-
+        playerCanvas.SetActive(true);
         GameManager.Instance.player.gameObject.SetActive(true);
         if (bossToSpawn != null)
         {

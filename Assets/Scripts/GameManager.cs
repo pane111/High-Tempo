@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        
         optionPath = Application.persistentDataPath + "/settings.json";
         StartCoroutine(FlashText(6, strings[curTut]));
         drone = FindObjectOfType<DroneScript>();

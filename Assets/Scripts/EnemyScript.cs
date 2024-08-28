@@ -40,6 +40,10 @@ public class EnemyScript : MonoBehaviour
 
     public bool grounded;
 
+    public GameObject stopPlayer1;
+    public GameObject stopPlayer2;
+
+
     float eTime = 0;
     Vector3 initialPosition;
     void Start()
@@ -62,11 +66,12 @@ public class EnemyScript : MonoBehaviour
     void Update()
     {
         float curDistance = player.position.z - transform.position.z;
+        float curYDistance = player.position.y - transform.position.y;
         if (canMove)
         {
             
 
-            if (Mathf.Abs(curDistance) <= playerFollowDistance)
+            if (Mathf.Abs(curDistance) <= playerFollowDistance && Mathf.Abs(curYDistance) < 4)
             {
                 following = true;
             }
@@ -83,7 +88,7 @@ public class EnemyScript : MonoBehaviour
             }
 
             
-            if (following && transform.position.z < player.position.z && health > 0)
+            if (following && transform.position.z < player.position.z && health > 0 && Mathf.Abs(curYDistance) < 4)
             {
                 transform.position = new Vector3(transform.position.x,transform.position.y, player.position.z+4);
                 teleport.Play();
@@ -141,6 +146,7 @@ public class EnemyScript : MonoBehaviour
 
     public void ResetEnemy()
     {
+        EnablePlayerStoppers();
         rb.velocity = Vector3.zero; 
         health = maxHealth;
         poise = maxPoise;
@@ -284,9 +290,19 @@ public class EnemyScript : MonoBehaviour
         rb.AddForce(transform.up * 8.5f, ForceMode.Impulse);
     }
     
-
+    void DisablePlayerStoppers()
+    {
+        stopPlayer1.SetActive(false);
+        stopPlayer2.SetActive(false);
+    }
+    void EnablePlayerStoppers()
+    {
+        stopPlayer1.SetActive(true);
+        stopPlayer2.SetActive(true);
+    }
     public void Die()
     {
+        DisablePlayerStoppers();
         rig = null;
         GetComponent<ScrewTarget>().EFB.fillAmount = 0;
         gameObject.tag = "Untagged";

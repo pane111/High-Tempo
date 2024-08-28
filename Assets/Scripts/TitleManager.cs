@@ -48,6 +48,8 @@ public class TitleManager : MonoBehaviour
 
         gToggle.isOn = options.screenGlitch;
         cToggle.isOn = options.defaultControls;
+
+        SaveOptionFile();
     }
 
     // Update is called once per frame
@@ -79,7 +81,7 @@ public class TitleManager : MonoBehaviour
     {
         if (!File.Exists(optionPath))
         {
-            File.Create(optionPath);
+            File.Create(optionPath).Close();
         }
         print("Saved options");
         string save = JsonUtility.ToJson(options);

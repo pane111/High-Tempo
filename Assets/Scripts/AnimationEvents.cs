@@ -36,7 +36,7 @@ public class AnimationEvents : MonoBehaviour
     
     void Start()
     {
-        
+        blackScreen.gameObject.SetActive(true);
         anim = GetComponent<Animator>();
         pm = GetComponent<PlayerMovement>();
         vm.profile.TryGet<DigitalGlitchVolume>(out dgv);
