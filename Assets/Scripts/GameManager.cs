@@ -132,6 +132,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Screen.fullScreen = !Screen.fullScreen;
+        }
+
         isLostTimeRunning = lostTime.IsRunning;
         eTime = DateTime.Now - startTime;
         if (!lostTime.IsRunning)
@@ -156,11 +161,11 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            DisplayDialogue("Stop bothering me already! You are annoying!");
+            //DisplayDialogue("Stop bothering me already! You are annoying!");
         }
         
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             TogglePause();
         }

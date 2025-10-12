@@ -55,7 +55,10 @@ public class TitleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Screen.fullScreen = !Screen.fullScreen;
+        }
     }
     public void PlayGame()
     {

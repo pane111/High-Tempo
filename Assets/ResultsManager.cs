@@ -28,13 +28,16 @@ public class ResultsManager : MonoBehaviour
         else
         { results = new Results(); }
 
-        resultText.text = "Total time: " + results.totalTime + "\nGrounded time: " + results.groundTime + "\nDon't worry, I didn't count the time you spent watching the cutscene";
+        resultText.text = "Total time: " + results.totalTime + "\nGrounded time: " + results.groundTime;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Screen.fullScreen = !Screen.fullScreen;
+        }
     }
     public void Return()
     {

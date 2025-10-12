@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -457,12 +456,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &931517862
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,7 +758,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SORRY, no boss fight for you :((
+  m_text: FINISHED
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0c1355b67e646ab449fccde42a847722, type: 2}
   m_sharedMaterial: {fileID: -3666310142585140018, guid: 0c1355b67e646ab449fccde42a847722,
@@ -939,7 +938,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: That will take a lot more time to add.
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0c1355b67e646ab449fccde42a847722, type: 2}
   m_sharedMaterial: {fileID: -3666310142585140018, guid: 0c1355b67e646ab449fccde42a847722,
@@ -967,7 +966,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1329,10 +1328,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Total time: --:--:--
 
-    Time spent on the ground: --:--:--
-
-    (Don''t
-    worry I didn''t count the time you spent watching the cutscene)'
+    Time spent on the ground: --:--:--'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 606421be5b883e643b7ef944a75c16fb, type: 2}
   m_sharedMaterial: {fileID: 4808466318350419298, guid: 606421be5b883e643b7ef944a75c16fb,
